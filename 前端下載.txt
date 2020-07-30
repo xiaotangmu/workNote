@@ -1,0 +1,5 @@
+1. 使用 a標簽
+2. 使用form
+3. 使用 window.open
+
+例子：https://hamupp.github.io/gitblog/app/jsBasic/jsButtonDownloadFile/index.html

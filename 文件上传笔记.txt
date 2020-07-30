@@ -1,0 +1,158 @@
+前端 -- jq
+1. serializeArray() 与 serialize() 区别
+form.serializeArray() 返回的是列表对象 Array[] -- 此数组有key（name）和value 相对应
+取参 
+var name = list[i].name
+取值
+var value = list[i].value
+
+form.serialize() 将表单数据根据name序列化
+序列化后格式为：&name=&password=xxx
+
+2. 文件form 不能直接序列化传给后台，要通过new FormData(form[0]) 对象添加传递 -- 直接序列化没有数据
+//封裝file模塊表單提交數據
+    function getFileData(){
+        var data = $("#newOutpatientAppointment").serializeArray();//获取其他form 要添加的数据
+
+        var formData1 = new FormData($("#tab3_form")[0]);
+
+        //array 数据添加进formData 对象中
+        for (var i = 0; i < data.length; i++) {
+            formData1.append(data[i].name, data[i].value);
+        }
+        formData1.append("appointmentInfoVo.resident_no", $('#resident_no').val());
+        formData1.append("delIds",tablePlanFile.delIds);
+        formData1.append("tab", 3);//3為文件上傳
+        return formData1;
+    }
+
+//提交ajax 注意 -- 上传对象要添加下列属性 -- 不然默认传递的是字符串（json）后台会拿不到文件数据 -- 类同multipart/form-data
+            cache: false,
+            contentType: false, //不设置内容类型
+            processData: false, //不处理数据type: 'post',
+例子：
+//序列化表单的值
+        $.ajax({
+            url: "newConsultationRecord/save",
+            type: 'POST',
+            data: formData,
+            cache: false,
+            contentType: false, //不设置内容类型
+            processData: false, //不处理数据type: 'post',
+            datType: 'json',
+            success: function (message) {
+                saveAfter(message);
+            }
+        });
+
+3. 比较数据是否进行了修改
+文件form 也像普通form 那样进行表单序列化比较 文件更改另外用文件路径比较 
+	-- 进入页面的时候就要初始化form
+function  serialize_fileUpload(){
+        var tabValue = "";
+        var TRS = $("#table_tbody3 tr[context]"); //-- 模板表格 -- <table id="table_tbody3"><tr context></tr></table>
+
+        for (var i = 0; i < TRS.length; i++) {
+            var List = TRS.eq(i).find("input,select,.underline");//找input select 和 类为underline 的对象
+            for (var k = 0; k < List.length; k++) {
+                if(k == 2){
+                    tabValue +=  "&" + (List.eq(k).attr("name") + "").replace("?", i) + "=" + List.eq(k).attr('href');
+                    continue;
+                }else{
+                    tabValue = tabValue + "&" + (List.eq(k).attr("name") + "").replace("?", i) + "=" + List.eq(k).val();
+                }
+            }
+        }
+        if (tabValue == "") {
+            return "";
+        }
+        return tabValue;
+    }
+
+4. 带有路径（特殊字符的）数据转换为json字符串
+直接转换会出错 -- 要要用eval 包裹数据 -- 也有问题 -- 反斜杠没了\
+解决自己手动拼接路径
+
+thymeleaf
+//显示（回显file form 数据）
+ function showFileDataTable(list, flag) {
+        let resultList;
+        if(flag != 'file'){//直接獲取空列表 -- 新增
+            var data = '[(${consultationFileVoList})]'; // 获取后台 model 里的对象数据
+            resultList = eval("("+data+")");//json特殊字符轉義 -- eval
+        }else{//回顯數據
+            resultList = list;
+        }
+
+        $("#table_tbody3 tr:not(:last)").remove();
+        if (resultList != undefined) {
+            for (let i in resultList) {
+                let $tr = $("#table_tbody3 tr[init]");
+                $tr.before($("#tableP3 tr").clone());
+                let $td = $("#table_tbody3 tr").eq(i);
+                for (let key in resultList[i]) {
+                    $td.find("[name*='" + key + "']").val(resultList[i][key]);
+                    if(key == 'seq_no'){
+                        $td.find("input[name*='seq_no']").attr("value",resultList[i][key]);
+                    }
+                    if (key == "name") {
+                        $td.find("a").eq(2).text(resultList[i][key]);
+
+		//手动赋路径 -- 解决\丢失问题
+                        $td.find("a").eq(2).attr("href", "newConsultationRecord/downloadFile?name=" + resultList[i][key]
+                            + "&appointment_info_no=" + resultList[i]['appointment_info_no'] + "&file_type_code="
+                            + resultList[i]['file_type_code']);
+                    }
+                    if(key == "upload_date"){
+                        if(flag == 'file'){
+                            $td.find("input:last").val(resultList[i][key]);
+                        }else{
+                            var date = new Date(resultList[i][key]);
+                            //year
+                            var y = date.getFullYear();
+                            //month
+                            var m = date.getMonth() + 1;
+                            //day
+                            var d = date.getDate();
+                            m = m < 10 ? "0" + m : m;
+                            d = d < 10 ? "0" + d : d;
+
+                            $td.find("input:last").val(d + "/" + m + "/" + y);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+5. 注意后台传过来的date数据也要格式化
+
+
+6. file 的 input-不和链接下载a标签放在同一td下，點擊無限循環
+
+后台
+1. 注意Dao层方法格式 
+删除 -- delXxx
+更新 -- updateXxx
+添加 -- saveXxx
+查询 -- selectXxx
+
+有增删改就要有 commonSelectRecords 方法 -- 切面自动调用
+ConsultationFileVo commonSelectRecords(ConsultationFileVo vo);
+
+<select id="commonSelectRecords" resultType="ConsultationFileVo">
+        select * from consultation_file where
+        Appointment_Info_No = #{appointment_info_no} and Seq_No = #{seq_no}
+    </select>
+
+还要注意 增删改都要同为批量操作 或者同为单一循环操作，因为要对应唯一的commonSelectRecords
+如果 
+单一操作 -- T commonSelectRecords(T vo);
+批量操作 -- List<T> commonSelectRecords(List<T> list);
+
+xml 相互对应
+
+2. 格式注意
+把多于的代码删除
+把多余的空格删除

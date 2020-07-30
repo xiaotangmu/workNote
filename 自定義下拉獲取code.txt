@@ -1,0 +1,7 @@
+找web - html -OptionService - ctrl - f ==Consultation_File
+頁面
+ <sam:select class="tr w150" maxlength="15" th:value="${appointmentInfoVo?.org_type_code}"
+                                id="org_type_code" 
+                                dropdownName="GetSystemCode" where="Consultation_File" name="org_type_code"/>
+
+dropdownName="GetSystemCode" 對應OptionService 方法 where 限制條件 code_table Code_Type_Code 字段
