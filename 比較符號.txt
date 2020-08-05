@@ -1,0 +1,11 @@
+-eq(equal) 相等
+
+-ne(inequality) 不相等
+
+-gt(greater than) 大于
+
+-lt(less than) 小于
+
+-ge(greater equal) 大于或等于
+
+-le(less equal) 小于或等于

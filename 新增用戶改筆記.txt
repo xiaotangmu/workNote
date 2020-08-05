@@ -1,0 +1,70 @@
+1. 打開新的頁面
+window.open("[[@{/newUser}]]?userCode="+userCode);//thymeleaf 利用後臺跳轉
+
+2. 關閉當前頁面
+window.close();
+
+3. 設置標題欄 使用類banner
+<div class="banner">
+    <b th:text="${sysUserVo?.userCode} ne null?#{button.common.editUser}:#{button.common.addUser}"></b>
+</div>
+
+注意sysUserVo 是Model 裏的數據 不能直接使用 th:if 判斷
+如果直接使用 th:if 判斷 儅沒有此對象時，會直接出錯 -- 不能判斷為undefined
+
+所以要使用th:text + 三元表達 -- th:text="${sysUserVo?.userCode} ne null?#{button.common.editUser}:#{button.common.addUser}
+
+4. 遍歷列表
+<table class="table_tbody  hbod child" id="userSpecialistVoList" style="table-layout: fixed;" border="0" cellpadding="0" cellspacing="0">
+                                                <tbody>
+                                                <th:block th:if="${sysUserVo?.userSpecialistVoList == null || sysUserVo?.userSpecialistVoList.size() == 0}">
+                                                    <tr>
+                                                        <td class="w50">
+                                                            <a href="javascript:void(0)" style="margin-left: 6px;" onclick="addTr(this,'specialistCodeListModel');" class="add"></a>
+                                                            <a href="javascript:void(0)" style="margin-left: 4px;" onclick="deleteTr(this);" class="delete"></a>
+                                                        </td>
+                                                        <td width="202">
+                                                            <sam:select class="tr"
+                                                                        id="specialistCodeName"
+                                                                        dropdownName="GetDepartment" name="specialistNo" ></sam:select>
+                                                        </td>
+                                                    </tr>
+                                                </th:block>
+                                                <th:block th:if="${sysUserVo?.userSpecialistVoList != null && sysUserVo?.userSpecialistVoList.size() gt 0}">
+                                                    <tr th:each="item:${sysUserVo?.userSpecialistVoList}">
+                                                        <td class="w50">
+                                                            <a href="javascript:void(0)" style="margin-left: 6px;" onclick="addTr(this,'specialistCodeListModel');" class="add"></a>
+                                                            <a href="javascript:void(0)" style="margin-left: 4px;" onclick="deleteTr(this);" class="delete"></a>
+                                                        </td>
+                                                        <td width="202">
+                                                            <sam:select class="tr"
+                                                                        id="specialistCodeName"
+                                                                        dropdownName="GetDepartment" name="specialistNo" th:value="${item.specialistNo}" ></sam:select>
+                                                        </td>
+                                                    </tr>
+                                                </th:block>
+                                                </tbody>
+                                            </table>
+
+th:value
+
+6. 下拉選擇框
+<sam:select class="tr"
+                                                                        id="specialistCodeName"
+                                                                        dropdownName="GetDepartment" name="specialistNo" th:value="${item.specialistNo}" ></sam:select>
+                                                        
+dropdownName="GetDepartment"  -- 對應的是optionService 裏面的方法，如果沒有已經寫的方法需要自己添加
+
+where 限制條件看情況使用
+
+7. 綁定新添加的下拉 .select-item 點擊事件
+$(document).on( 'click', '#userSpecialistVoList .select .select-item', function(){
+        var res = changeSpecialist();
+        if (res != undefined && res != null && res != "" ){
+            Showbo.Msg.alert(res);
+        }
+    })
+
+8. 驗證
+validation="1[長度],13" onblur(或其他)="comValid()" -- 觸發驗證事件
+第二個參數為類型 13 -- 非空
