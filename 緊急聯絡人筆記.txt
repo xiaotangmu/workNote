@@ -17,3 +17,19 @@ $(function(){})  中先獲取空form 以便 form 序列化比較
 
 建議如果要判斷顯示什麽的，直接用jquery 動態加載下拉列表
 
+
+Jquery
+2. $.each
+ $.each(list, function(index, item){
+
+	// continue
+	return ture;
+
+	// break;
+	return false;
+})
+
+3. $("li:first").closest(["ul", "body"]);
+ closest会首先检查当前元素是否匹配，如果匹配则直接返回元素本身。
+如果不匹配则向上查找父元素，一层一层往上，直到找到匹配选择器的元素。
+如果什么都没找到则返回一个空的jQuery对象。
