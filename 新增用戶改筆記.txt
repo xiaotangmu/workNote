@@ -48,6 +48,9 @@ window.close();
 
 th:value
 
+注意 是否存在對象用？號表示0或1個 item:${sysUserVo?.userSpecialistVoList}
+
+
 6. 下拉選擇框
 <sam:select class="tr"
                                                                         id="specialistCodeName"

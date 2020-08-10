@@ -1,0 +1,19 @@
+thymeleaf
+1. th:each
+<tr th:each="item,itemData:${userlist}">
+	...
+</tr>
+其中 itemData 称作状态变量，属性有：
+               index:当前迭代对象的迭代索引，从0开始，这是索引属性；
+               count:当前迭代对象的迭代索引，从1开始，这个是统计属性；
+               size:迭代变量元素的总量，这是被迭代对象的大小属性；
+               current:当前迭代变量；
+               even/odd:布尔值，当前循环是否是偶数/奇数（从0开始计算）；
+               first:布尔值，当前循环是否是第一个；
+               last:布尔值，当前循环是否是最后一个；
+
+初始化是在初始完document 后再遍歷初始化，所以可以在
+$(function(){})  中先獲取空form 以便 form 序列化比較
+
+建議如果要判斷顯示什麽的，直接用jquery 動態加載下拉列表
+
