@@ -1,0 +1,17 @@
+不要使用json 异步传输
+1. 使用 window.location.href = '/url?name=xx&pwd=xxx'
+直接路径跳转带的数据有限 
+
+2. 使用 form 元素，设置为post 传递
+// 拼接路徑參數
+        let urlValue = "?resident_no=" + '[(${ResidentVo.resident_no})]' + "&admission_date=" + '[(${ResidentVo.admission_date})]';
+        document.write("<form action='newReceipt"
+            + urlValue
+            +  "' method='post' name='form1' style='display:none'>");
+        document.write("<input type=hidden name='billList' value='"+JSON.stringify(billVoList)+"'/>");
+        document.write("</form>");
+        document.form1.submit();
+
+将大数据放入input，路径参数放置action， 后台接收 -- @RequestParam
+
+3. 后台路径跳转，注意不要使用 重定向， 请求改变 model 带不过数据，使用 转发 可以用model 带数据

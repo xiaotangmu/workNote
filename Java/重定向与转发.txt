@@ -1,0 +1,65 @@
+https://www.cnblogs.com/zxguan/p/8390686.html
+
+Spring 后台方法 重定向 与 转发
+一、重定向：重定向是客户端行为，在使用时，务必使用全路径，否则可能因为外部环境导致错误
+
+　　1、URL改变为重定向的URL地址
+
+　　2、前台页面不能使用Ajax请求提交， 应该使用form表单提交
+
+　　方法一、参数URL
+
+return new RedirectView("https://www.baidu.com")
+　　方法二、参数URL
+
+return "redirect:https://www.baidu.com";//协议类型一定要有
+return "redirect:/home";
+　　方法三、参数URL
+
+response.sendRedirect("https://www.baidu.com");
+　　方法四、参数view、viewName
+
+return new ModelAndView("redirect:https://www.baidu.com")
+　　3、参数传递
+
+　　方法一、直接在url后面拼接参数，使用@RequestParam来取值，不推荐使用
+
+　　方法二、在controller方法的参数中使用RedirectAttributes来传递参数；在跳转的controller中同样使用@RequestParam来取值，在浏览器中同样是拼接参数的形式
+
+    public String redirect(RedirectAttributes attr) {
+        attr.addAttribute("name", "zhangsan");
+        return "redirect:/home";
+    }
+　　方法三、使用RedirectAttributes的addFlashAttribute的方法来设置值，原理是在跳转前将值放入session中，跳转之后就将值清除掉。浏览器的地址不显示参数的值，推荐使用这种方法来传值。
+
+ attr.addFlashAttribute("name", "zhangsan");
+　　重定向的方法中取值：@ModelAttribute("name") String name， 前台页面中无法取到该值
+
+二、转发，服务器行为相对路径没有问题
+
+　　1、地址栏不会改变
+
+　　2、转发前后，后边的控制器继承前边控制器的请求参数（前边的控制器中改变参数，后边控制器看到的参数是更改后的参数）
+
+　　3、拦截器只拦截一次请求
+
+　　4、转发会在后台执行多个控制器
+
+　　方法一、
+
+return "forward:/dengluPost";
+　　方法二、参数URL
+
+request.getRequestDispatcher("/dengluPost").forward(request,response);
+　　方法三、参数view、viewName
+
+return new ModelAndView("forward:/dengluPost")
+ 
+
+ 
+
+三、知识点
+
+　　1、单系统， 经过重定向、转发的请求 sessionId 不变
+
+　　2、
