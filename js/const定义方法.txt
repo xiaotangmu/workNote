@@ -1,0 +1,1 @@
+const funName = (val1, val2, ..., valn) => {}

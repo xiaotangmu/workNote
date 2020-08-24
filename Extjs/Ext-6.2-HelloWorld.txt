@@ -1,0 +1,29 @@
+https://www.cnblogs.com/aliblogs/p/5991240.html
+官網下載：http://extjs.org.cn/node/793 	--- Extjs 6.0
+
+使用直接在Extjs 包的 build 包下創建新html 文件，再把ext-bootstrap.js 、ext-all.js和各樣式分別引入
+（在其他地方創建注意要用build為相對路徑，js裏面還有調用，不然樣式路徑不對，顯示不了）
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <!--ExtJs框架开始-->
+    
+    <link rel="stylesheet" type="text/css" href="build/classic/theme-neptune/resources/theme-neptune-all.css">  
+        <!-- 引入ExtJs核心Js -->  
+        <script type="text/javascript" src="ext-bootstrap.js"></script>  
+        <script type="text/javascript" src="build/ext-all.js"></script>  
+        <script type="text/javascript" src="build/classic/locale/locale-zh_CN.js"></script>  
+    
+    <!--ExtJs框架结束-->
+    <script type="text/javascript">
+        Ext.onReady(function () {
+            Ext.MessageBox.alert('标题', 'Hello World!');
+        });
+    </script>
+</head>
+<body>
+</body>
+</html>

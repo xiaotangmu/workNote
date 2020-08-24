@@ -1,0 +1,12 @@
+该提示框是异步方法，不能将操作写在外面，除非设置为同步，并等待返回
+和 vue 一样不能直接使用 this
+
+let element = this;
+Showbo.Msg.confirm(tip, "",
+            function () {        
+	$(element).val('Hello');
+            },
+            function () {
+                return;
+            }
+);

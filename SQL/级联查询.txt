@@ -1,0 +1,16 @@
+1. 級聯查詢 用on
+SELECT * 
+from medical_record mr LEFT JOIN clinic c on c.Clinic_No = mr.Clinic_No 
+WHERE mr.Patient_ID=99;
+
+2. on & where 
+on 是多表连接，用于限制连接条件
+where 是查询条件 针对单表（连接后的表）
+
+on、where、having这三个都可以加条件的子句中，on是最先执行，where次之，having最后。
+有时候如果这先后顺序不影响中间结果的话，那最终结果是相同的。
+但因为on是先把不符合条件的记录过滤后才进行统计，
+它就可以减少中间运算要处理的数据，按理说应该速度是最快的。
+
+4. inner join 与 left join
+数据多用 inner join 

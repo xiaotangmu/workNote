@@ -1,0 +1,5 @@
+注意在 js 中直接使用 '[[${}]]'  转换为json 会出错
+
+要使用 [(${})]
+
+let billVoAll = JSON.parse('[(${billVoAll})]'); // 所有

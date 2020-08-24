@@ -1,0 +1,4 @@
+count & sum
+统计总数若不用计算直接 -- count -- 里面计算没用
+需要计算或者判断，如 case when 用 sum
+sum(case when score > 60 then 1 else 0 end)

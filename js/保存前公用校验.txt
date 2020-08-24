@@ -1,0 +1,1 @@
+beforeSaveValite(selector); 包含validation 的父元素/本身

@@ -1,0 +1,22 @@
+日期数据比较 
+1. 相同格式可以日期类型可以直接和字符串比较
+date = '2010-10-22';
+
+2. 不同格式要转换才能比较
+2.1 使用STR_TO_DATE('') 将字符串转为日期
+2.2 使用Date_format(date, 'd%m%y%'); 将日期转为特定格式字符串，或者将日期字符串转为特定格式字符串
+
+案例：获取当前总分最高的学生信息和最后公布的那门成绩
+思路：先根据成绩表得到总分最高的学生ID，再根据学生id 获取最大id 的课程成绩 -- 最后公布，作为第三表，
+关联查询 学生信息表，成绩表，和第三表
+（下面是另一个例子）
+select b1.*, bp3.Receipt_No Receipt_No, SUM(bp.Pay) Pay, bp3.Remark
+        from bill b1
+        left JOIN bill_pay bp ON b1.Bill_No = bp.Bill_No AND b1.Home_No = bp.Home_No
+        left JOIN
+            (SELECT b1.* FROM bill_pay b1,
+                (select max(Receipt_No) Receipt_No, Bill_No, Home_No from bill_pay GROUP BY Bill_No, Home_No) b2
+                where b1.Bill_No = b2.Bill_No and b1.Home_No = b2.Home_No AND b1.Receipt_No = b2.Receipt_No) bp3
+            ON bp3.Bill_No = bp.Bill_No AND bp3.Home_No = bp.Home_No
+        where Resident_No = #{residentNo} and Admission_Date = STR_TO_DATE(#{admissionDate},'%d/%m/%y')
+        GROUP BY Bill_No, Home_No

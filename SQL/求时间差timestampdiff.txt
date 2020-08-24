@@ -1,0 +1,13 @@
+https://blog.csdn.net/laowang2915/article/details/79666642
+
+时间差函数TIMESTAMPDIFF、DATEDIFF的用法
+
+
+datediff -- 求相差天数
+datediff(date1, date2); -- 一般前大后小
+
+
+TIMESTAMPDIFF函数，
+有参数设置 year, month, day, hour, minute, second
+
+select TIMESTAMPDIFF(SECOND, '2018-03-20 09:00:00', '2018-03-22 10:00:00'); -- 后大前小

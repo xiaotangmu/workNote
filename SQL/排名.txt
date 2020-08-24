@@ -1,0 +1,18 @@
+MySQL 没有 rank 函数，需要自动排名
+
+解决：
+使用自定义变量
+例子：
+set @rank := 0;
+SELECT a.*, @rank := @rank + 1 as rank FROM
+(SELECT st.s_id,st.s_name,st.s_sex, '语文' as course, sc.s_score
+FROM student st
+inner JOIN score sc ON sc.s_id = st.s_id AND sc.c_id = '01'
+ORDER BY sc.s_score desc) a
+
+注意：
+不能直接在 排序的里面 加 @rank := @rank + 1；会出错，排名跟着id，排名只会按调用顺序排，
+所以排序的查询结果要作为一个新表，再排名
+-- 先排序 -- 新表 -- 再排名（@rank）
+
+变量赋值 := 不能直接用 =

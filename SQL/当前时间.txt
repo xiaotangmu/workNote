@@ -1,0 +1,9 @@
+now(), sysdate(), current_timestamp(), current_timestamp
+区别：
+sysdate() 日期时间函数跟 now() 类似，不同之处在于：now() 在函数（语句）执行开始时值就得到了，
+ sysdate() 在函数执行时动态得到值。
+
+sysdate() 日期时间函数，一般情况下很少用到。
+
+当前时间戳
+MySQL 获得当前时间戳函数：current_timestamp, current_timestamp()

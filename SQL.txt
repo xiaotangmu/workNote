@@ -1,2 +1,0 @@
-級聯查詢 用on
-SELECT * from medical_record mr LEFT JOIN clinic c on c.Clinic_No = mr.Clinic_No WHERE mr.Patient_ID=99

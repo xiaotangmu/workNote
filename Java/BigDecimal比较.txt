@@ -1,0 +1,16 @@
+1. BigDecimal 比较使用 a.compareTo(b) 方法 
+注意： 
+1. a、b 均为 BigDecimal 类型 ；
+2. a、b均不能为null，否则会报空指针；
+3. 比较结果 -1/0/1 分别为 a小于b/等于/大于 
+if (a.compareTo(b) == 0) {}
+
+2. BigDecimal 不能直接和 int 等类型直接比较
+可以先让其他类型转换为 BigDecimal 类型 再比较
+
+3. 
+System.out.println(new BigDecimal("1.2").equals(new BigDecimal("1.20")));  //输出false
+System.out.println(new BigDecimal("1.2").compareTo(new BigDecimal("1.20")) == 0); //输出true
+
+4. 可以使用BigDecimal 已有数据比较，如0
+a.compareTo(BigDecimal.ZERO) == 0 与0 比较大小

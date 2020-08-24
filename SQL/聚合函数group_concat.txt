@@ -1,0 +1,4 @@
+SELECT id,GROUP_CONCAT(score SEPARATOR ';') FROM testgroup GROUP BY id
+ 聚合函数，可以拼接字符 连接
+
+34;45;34;
