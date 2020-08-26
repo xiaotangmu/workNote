@@ -1,0 +1,56 @@
+https://segmentfault.com/a/1190000015381362
+
+//获取当前日期 时间
+function todayTime() {
+        var date = new Date();
+        var curYear = date.getFullYear();
+        var curMonth = date.getMonth() + 1;
+        var curDate = date.getDate();
+        if(curMonth<10){
+                curMonth = '0' + curMonth;
+        }
+        if(curDate<10){
+                curDate = '0' + curDate;
+        }    
+        var curHours = date.getHours();
+        var curMinutes = date.getMinutes();
+        var curtime = curYear + ' 年 ' + curMonth + ' 月 ' + curDate +' 日' + curHours + '时 ' + curMinutes + '分 ';
+        return curtime;
+}
+
+
+m = m < 10 ? "0" + m : m;
+d = d < 10 ? "0" + d : d;
+
+
+4、 自定义任意格式
+Date.prototype.Format = function (fmt) {
+    var o = {
+        "M+": this.getMonth() + 1, // 月份
+        "d+": this.getDate(), // 日
+        "h+": this.getHours(), // 小时
+        "m+": this.getMinutes(), // 分
+        "s+": this.getSeconds(), // 秒
+        "q+": Math.floor((this.getMonth() + 3) / 3), // 季度
+        "S": this.getMilliseconds()
+        // 毫秒
+    };
+    if (/(y+)/.test(fmt))
+        fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "")
+            .substr(4 - RegExp.$1.length));
+    for (var k in o)
+        if (new RegExp("(" + k + ")").test(fmt))
+            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) :
+                (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+   }
+使用方法：
+
+new Date().Format('yyyy-MM-dd hh:mm')
+//console.log打印结果： "2019-08-22 16:42"
+
+new Date().Format('yyyy.MM.dd hh:mm')
+//console.log打印结果： "2019.08.22 16:44"
+
+new Date().Format('yyyy-MM-dd')
+//console.log打印结果："2019-08-22"

@@ -5,6 +5,16 @@ date = '2010-10-22';
 2. 不同格式要转换才能比较
 2.1 使用STR_TO_DATE('') 将字符串转为日期
 2.2 使用Date_format(date, 'd%m%y%'); 将日期转为特定格式字符串，或者将日期字符串转为特定格式字符串
+時分秒
+将数据库日期格式转化为string（yyyy-MM-dd HH:mm:ss 格式）：
+
+SELECT DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
+
+将数据库日期格式转化为string（yy-MM-dd hh:mm:ss 格式）：
+
+SELECT DATE_FORMAT(NOW(),'%y-%m-%d %h:%i:%s')
+
+
 
 案例：获取当前总分最高的学生信息和最后公布的那门成绩
 思路：先根据成绩表得到总分最高的学生ID，再根据学生id 获取最大id 的课程成绩 -- 最后公布，作为第三表，
