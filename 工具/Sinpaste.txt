@@ -1,0 +1,7 @@
+https://zhuanlan.zhihu.com/p/88023168?utm_source=wechat_session
+
+F1 --  截屏
+F3 -- 貼屏
+Shift + F3 撤銷貼屏
+Crtl + F3 切換貼屏
+Shift + Esc 銷毀貼圖
