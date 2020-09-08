@@ -1,0 +1,19 @@
+// 字符串拼接 + 一定要写在后面
+				def sqlStr1 = "insert into gift(version, Type_Code, Gift_Name, Gift_Description, Required_Bonus_Point, " +
+						" Effective_Date," +
+						" Expire_Date," + " Active, create_by, date_created, updated_by, last_updated)" +
+						" values(" +
+						1 + ", " + params.typeCode + ", '" + params.giftName + "', '" + params.giftDescription + "'," +
+						params.requiredBonusPoint + ", " + ((params.effectiveDate==null)?"null":("'" + params.effectiveDate + "'")) +
+						", " + ((params.expireDate==null)?"null":("'" + params.expireDate + "'")) + ", " +
+						params.active + "," +
+						createBy  + ", '" +
+						createDateStr  + "'," +
+						createBy  + ",'" +
+						createDateStr + "')"
+				sql.execute(sqlStr1)
+
+
+注意：
+1. 将sql 用字符串写出来， 不要再execute 里面写
+2. 字符串拼接 加号写在后面

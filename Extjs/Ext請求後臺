@@ -1,0 +1,149 @@
+Extjs 請求 
+1. store 使用 proxy 代理請求
+Ext.define('User', {
+            extend: 'Ext.data.Model',
+            fields: ['id', 'name', 'email']
+        });
+        var myStore = Ext.create('Ext.data.Store', {
+            model: 'User',
+            proxy: {
+                type: 'ajax',   // GET
+                url: '/getStudents',
+                reader: {
+                    type: 'json',
+                    root: 'users'
+                }
+            },
+            autoLoad: true
+        });
+
+        myStore.load();
+		
+2. store 自定義 proxy post 請求
+https://www.cnblogs.com/feiqihang/p/5053881.html
+
+Ext.define('Ext.ux.data.proxy.JsonAjaxProxy', {
+extend:'Ext.data.proxy.Ajax',
+alias:'proxy.jsonajax',
+actionMethods : {
+create: "POST",
+read: "POST",
+update: "POST",
+destroy: "POST"
+},
+buildRequest:function (operation) {
+var request = this.callParent(arguments);
+       // For documentation on jsonData see Ext.Ajax.request
+        request.jsonData = request.params;
+        request.params = {};
+       return request;
+},
+/*
+* @override
+* Inherit docs. We don't apply any encoding here because
+* all of the direct requests go out as jsonData
+*/
+applyEncoding: function(value){
+return value;
+}
+});
+
+使用也很方便，将proxy的type设置为jsonajax即可。
+
+proxy : {
+   type : 'jsonajax'
+   ...
+}
+
+https://blog.csdn.net/diweikang/article/details/48344523
+3. request
+		Ext.Ajax.request({
+			method : 'POST',
+			url : '../../../dayReportController/deleteMenu.do',
+			params : {
+				'id' : id // 要删除记录的id
+			},
+			success : function(response, config) {
+				/*
+				// 后台：out.print(1);
+				var result = response.responseText;
+				if (parseInt(result) == 1) {
+					Ext.getCmp('menuGrid').getStore().reload();
+					Ext.Msg.alert("提示", '删除成功!');
+				} else {
+					Ext.Msg.alert('提示', '删除失败!');
+				}
+				*/
+				
+				// 后台：out.print({success : true});
+				var json = Ext.util.JSON.decode(response.responseText);
+				if (json.success == true) {
+					Ext.getCmp('menuGrid').getStore().reload();
+					Ext.Msg.alert("提示", '删除成功!');
+				} else {
+					Ext.Msg.alert('提示', '删除失败!');
+				}
+			},
+			failure : function() {
+				Ext.Msg.alert('提示', '删除失败!');
+			}
+		});
+		
+4. 表單提交
+Ajax请求和Form的submit方法设置请求方式和原来一样，使用method : 'POST'设置
+
+    		// 表单提交
+    		winForm.getForm().submit({
+    			waitTitle : '提示',// 标题
+    			waitMsg : '正在提交数据请稍后...',// 提示信息
+    			url : '../../../dayReportController/add.do',
+    			method : 'POST',
+    			params : { // 此处可以添加额外参数
+    				extraParems : 'extraParems'
+    			},
+    			success : function(form, action) {
+    				/*
+    				 * 第二种方法获取返回值
+    				var success = action.result.success;
+    				alert(success);
+    				*/
+    				
+    				var respText = Ext.util.JSON.decode(action.response.responseText)
+    				if (respText.success == true) {
+    					Ext.Msg.alert('消息', '保存成功！');
+    					Ext.getCmp('win').close();// 添加成功后关闭窗口
+    					Ext.getCmp('menuGrid').getStore().reload(); // 添加成功后重新刷新表格
+    				} else {
+    					Ext.Msg.alert('消息', respText.msg);
+    				}
+    			},
+    			failure : function(form, action) {
+    				Ext.Msg.alert("消息", "操作失败!");
+    			}
+    		});
+			
+5. store 2.的實質
+Store设置请求方式使用actionMethods : {
+
+                                                                read : 'POST'
+
+                                      }
+
+
+    	    var store = Ext.create('Ext.data.Store', {
+    			// autoLoad : true,
+    			pageSize : main.gridPageSize,
+    			fields : ['id', 'text', 'description', 'url', 'leaf'],
+    			proxy : new Ext.data.HttpProxy({
+    				type : 'ajax',
+    				url : '../../../dayReportController/test.do',
+    				actionMethods : {
+    					read : 'POST' // Store设置请求的方法，与Ajax请求有区别
+    				},
+    				reader : new Ext.data.JsonReader({
+    					type : 'json',
+    					rootProperty : 'data',// 数据(不配置的话无法接收数据)，返回的key为data
+    					totalProperty : 'totalRecord'// 记录数(不配置的话无法翻页)，返回的key为totalRecord
+    				})
+    			})
+    		});
